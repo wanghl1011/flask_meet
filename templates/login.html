@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/bootstrap-3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+
+<form class="form-horizontal" method="post" action="/login" novalidate>
+    <h3>先登录</h3>
+    <div class="form-group">
+        <label for="name" class="col-md-2 control-label">用户名</label>
+        <div class="col-md-6">
+        {{ form.name }}
+        </div>
+        <div style="color: red">{{ form.errors.get('name')[0] }}</div>
+    </div>
+    <div class="form-group">
+        <label for="pwd" class="col-md-2 control-label">密码</label>
+        <div class="col-md-6">
+        {{ form.pwd }}
+        </div>
+        <div style="color: red">{{ form.errors.get('pwd')[0] }}</div>
+    </div>
+    <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-6">
+      <button type="submit" class="btn btn-default">登录</button>
+        <div style="color: red;">{{ error }}</div>
+    </div>
+
+    </div>
+
+</form>
+</div>
+{#<div class="container">#}
+{#    <input type="text">#}
+{#    <input type="text">#}
+{#    <button type="submit">登录</button>#}
+{#</div>#}
+
+</body>
+</html>

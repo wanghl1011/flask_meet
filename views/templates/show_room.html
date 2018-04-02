@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/bootstrap-3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/bdm/css/bootstrap-datetimepicker.min.css">
+    <style>
+        #datetimepicker {
+            float: right;
+            margin-top: 20px
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h3 style="">会议室预约</h3>
+    <div>{{ time }}</div>
+    <div style="float: left" class="input-append date" id="datetimepicker" data-date="" data-date-format="dd-mm-yyyy">
+        <span>选择时间</span>&nbsp;&nbsp;
+        <input class="span2" size="16" type="text" value="">
+        <span class="add-on"><i class="icon-remove"></i></span>
+        <span class="add-on"><i class="icon-th"></i></span>
+    </div>
+</div>
+
+<div style="margin-top: 20px" class="container">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <td>#</td>
+            {% for time in time_list %}
+                <td>{{ time.get('time_area') }}</td>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for key,value in data_dict.items() %}
+            <tr>
+                {% for data in value %}
+                    {% if data.get('isroom') %}
+                        <td>{{ data.get('name') }}</td>
+                    {% else %}
+                        {% if data.get('isbook') %}
+                            <td class="active">
+                                <p>{{ data.get('username') }}</p>
+                                <p>{{ data.get('room_name') }}</p>
+                                <p>{{ data.get('time_area') }}</p>
+                            </td>
+                        {% else %}
+                            <td rpk="{{ data.get('room_pk') }}" tpk="{{ data.get('time_pk') }}" class="book"
+                                style="background-color: #9acfea;color: white;" role="button">预约
+                            </td>
+                        {% endif %}
+                    {% endif %}
+
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<script src="/static/js/jquery-3.2.1.min.js"></script>
+<script src="/static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+<script src="/static/bdm/js/bootstrap-datetimepicker.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var myDate = new Date();
+        var url_data = window.location.search;
+        var arr=url_data.split("=");
+        $(".book").on("click", function () {
+            r=confirm("确定预约吗？？？一旦预约成功无法取消");
+            if (r === true){
+
+            }else{
+                return false
+            }
+            var t = arr[1];
+            if (t){
+
+            }else{
+                t=""
+            }
+
+            $.ajax({
+                url: "/app01/order/",
+                type: "post",
+                data: {
+                    rpk: $(this).attr("rpk"),
+                    tpk: $(this).attr("tpk"),
+                    time:t
+                },
+{#                headers: {"X-CSRFToken": $('[name="csrfmiddlewaretoken"]').val()},#}
+                success: function (data) {
+                    var ndata = JSON.parse(data);
+                    if (ndata.code === 1000) {
+                        alert("预约成功");
+                        location.reload()
+                    } else {
+                        alert(ndata.msg)
+                    }
+                }
+            })
+        });
+        $(".form_datetime").datetimepicker({
+            format: "dd MM yyyy"
+        });
+        $('#datetimepicker').datetimepicker({
+            autoclose: true,
+            minView: 2,
+            startDate:myDate.toLocaleDateString()
+        }).on('changeDate', function (ev) {
+            var date = $(".span2").val();
+            var my_url = "/app01/show/?t="+date;
+            location.href = my_url
+            });
+    })
+</script>
+</body>
+</html>
